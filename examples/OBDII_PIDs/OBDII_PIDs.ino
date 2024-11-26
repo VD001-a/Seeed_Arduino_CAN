@@ -87,11 +87,17 @@ void setup() {
     SERIAL_PORT_MONITOR.begin(115200);
     while(!Serial){};
 
-    while (CAN_OK != CAN.begin(CAN_500KBPS)) {             // init can bus : baudrate = 500k
+    //Original code: while (CAN_OK != CAN.begin(CAN_500KBPS))
+    //Not accepted by Arduino IDE 2.3.3 and Arduino UNO R4 Minima
+    //thus substituted with the following for this use case, according also to the CANRead.ino example provided by Arduino
+    //Please note that this code might not be sufficient to get OBDII messages from a vehicle OBDII CAN bus
+    while (!CAN.begin(CAN_500KBPS)) {             // init can bus : baudrate = 500k
         SERIAL_PORT_MONITOR.println("CAN init fail, retry...");
         delay(100);
     }
-    SERIAL_PORT_MONITOR.println("CAN init ok!");
+    //Original code SERIAL_PORT_MONITOR.println("CAN init ok!");
+    Serial.println("CAN BUS OK!");
+    //From this point onward please check if you can use it
     set_mask_filt();
 }
 
